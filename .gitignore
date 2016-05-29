@@ -1,0 +1,6 @@
+.tmp/
+bower_components/
+dist/
+nbproject/
+node_modules/
+report/
