@@ -1,6 +1,7 @@
 /* jshint -W117, -W030 */
 describe('HomeController', function () {
     var controller;
+    var layout = mockData.getMockLayout();
 
     beforeEach(function () {
         bard.appModule('app.home');
@@ -8,6 +9,7 @@ describe('HomeController', function () {
     });
 
     beforeEach(function () {
+        sinon.stub(dataservice, 'getLayout').returns($q.when(layout));
         controller = $controller('HomeController');
         $rootScope.$apply();
     });
@@ -26,6 +28,10 @@ describe('HomeController', function () {
 
             it('should have logged "Activated"', function () {
                 expect($log.info.logs).to.match(/Activated/);
+            });
+           
+            it('should have at least 1 record', function() {
+              expect(controller.layout.Search).to.have.length.above(0);
             });
         });
     });

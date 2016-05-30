@@ -15,14 +15,7 @@
     </head>
 
     <body>
-        <h1><a href="specs.html">Spec Runner</a></h1>
-        <p>
-            Click on a <em>description title</em> to narrow the scope to just its specs
-            (see "<a href="http://mochajs.github.io/mocha/#grep-option" target="_blank" title="MochaJS grep option">
-                ?grep</a>" in address bar).<br/>
-            Click on a <em>spec title</em> to see the test implementation.<br/>
-            Click on <em>page title</em> to start over.
-        </p>
+        <h3><a href="specs.html">Spec Runner</a></h3>
         <div id="mocha"></div>
         <!-- inject:testlibraries:js -->
         <script src="node_modules/mocha/mocha.js"></script>
@@ -55,9 +48,9 @@
         <!-- inject:js -->
         <script src="/app/app.module.js"></script>
         <script src="/app/core/core.module.js"></script>
+        <script src="/app/home/home.module.js"></script>
         <script src="/app/layout/layout.module.js"></script>
         <script src="/app/widgets/widgets.module.js"></script>
-        <script src="/app/home/home.module.js"></script>
         <script src="/app/blocks/exception/exception.module.js"></script>
         <script src="/app/blocks/logger/logger.module.js"></script>
         <script src="/app/blocks/router/router.module.js"></script>
@@ -73,11 +66,13 @@
         <script src="/app/blocks/router/router-helper.provider.js"></script>
         <!-- endinject -->
         <!-- inject:spechelpers:js -->
+        <script src="test-helpers/mock-data.js"></script>
         <!-- endinject -->
         <!-- inject:specs:js -->
         <script src="app/core/core.route.spec.js"></script>
         <script src="app/home/home.controller.spec.js"></script>
         <script src="app/home/home.route.spec.js"></script>
+        <script src="app/home/home.unit.spec.js"></script>
         <script src="app/blocks/exception/exception-handler.provider.spec.js"></script>
         <!-- endinject -->
         <!-- inject:templates:js -->

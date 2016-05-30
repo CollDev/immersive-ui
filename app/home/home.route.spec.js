@@ -9,6 +9,8 @@ describe('Home routes', function () {
             $templateCache.put(view, '');
         });
         
+        bard.verifyNoOutstandingHttpRequests();
+        
         it('should map /home route to home View template', function () {
             expect($state.get('home').templateUrl).to.equal(view);
         });

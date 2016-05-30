@@ -9,14 +9,28 @@
     /* @ngInject */
     function HomeController($q, dataservice, logger) {
         var vm = this;
+
+        vm.layout = [];
         vm.title = 'Home';
-        
+
         activate();
         
         ////////
 
         function activate() {
-            logger.info('Activated Dashboard View');
+            var promises = [getLayout()];
+            
+            return $q.all(promises).then(function () {
+                logger.info('Activated home view');
+            });
+        }
+
+        function getLayout() {
+            return dataservice.getLayout().then(function (data) {
+                vm.layout = data;
+                
+                return vm.layout;
+            });
         }
     }
 })();

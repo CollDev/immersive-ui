@@ -373,7 +373,7 @@ function startBrowserSync(isDev, specRunner) {
     }
 
     var options = {
-        proxy: 'local.immersive.com:80',
+        proxy: 'http://local.immersive.com/#/',
         port: 3000,
         files: [
             config.clientApp + '**/*.*',

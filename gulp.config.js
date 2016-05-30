@@ -38,7 +38,7 @@ module.exports = function() {
             clientApp + '**/*.js',
             '!' + clientApp + '**/*.spec.js',
             '!' + client + 'test-helpers/*.js',
-            '!' + client + 'tests/**/*spec.js'
+            '!' + client + 'tests/**/*.spec.js'
         ],
         karma: {
             files: karmaFiles,
