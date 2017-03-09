@@ -7,10 +7,10 @@ describe('blocks.exception', function () {
     };
 
     beforeEach(function () {
-        bard.appModule('blocks.exception', function (_exceptionHandlerProvider_) {
+        bard.appModule('blocks.exception', 'app.core', function (_exceptionHandlerProvider_) {
             exceptionHandlerProvider = _exceptionHandlerProvider_;
-        });
-        bard.inject('$rootScope');
+        }, function ($provide) {});
+        bard.inject('$rootScope', 'logger','toastr');
     });
 
     bard.verifyNoOutstandingHttpRequests();
@@ -24,11 +24,11 @@ describe('blocks.exception', function () {
             expect(exceptionHandlerProvider).to.be.defined;
         }));
 
-        it('should have configuration', inject(function () {
+        it('should have config', inject(function () {
             expect(exceptionHandlerProvider.config).to.be.defined;
         }));
 
-        it('should have configuration', inject(function () {
+        it('should have configure', inject(function () {
             expect(exceptionHandlerProvider.configure).to.be.defined;
         }));
 
@@ -43,7 +43,7 @@ describe('blocks.exception', function () {
 
             it('should have appErrorPrefix set properly', inject(function () {
                 expect(exceptionHandlerProvider.$get().config.appErrorPrefix)
-                        .to.equal(mocks.prefix);
+                    .to.equal(mocks.prefix);
             }));
 
             it('should throw an error when forced', inject(function () {
@@ -57,7 +57,17 @@ describe('blocks.exception', function () {
                     $rootScope.$apply(functionThatWillThrow);
                 } catch (ex) {
                     exception = ex;
-                    expect(ex.message).to.equal(mocks.prefix + mocks.errorMessage);
+                    expect(ex.message).to.equal(mocks.errorMessage);
+                }
+            });
+
+            it('should throw error message without prefix', function () {
+                delete exceptionHandlerProvider.config.appErrorPrefix;
+                try {
+                    $rootScope.$apply(functionThatWillThrow);
+                } catch (ex) {
+                    exception = ex;
+                    expect(ex.message).to.equal(mocks.errorMessage);
                 }
             });
         });

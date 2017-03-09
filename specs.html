@@ -41,9 +41,9 @@
         <script src="bower_components/moment/moment.js"></script>
         <script src="bower_components/angular-mocks/angular-mocks.js"></script>
         <script src="bower_components/angular-scenario/angular-scenario.js"></script>
-        <script src="bower_components/sinon/index.js"></script>
         <script src="bower_components/bardjs/dist/bard.js"></script>
         <script src="bower_components/bardjs/dist/bard-ngRouteTester.js"></script>
+        <script src="bower_components/sinonjs/sinon.js"></script>
         <!-- endbower -->
         <!-- inject:js -->
         <script src="/app/app.module.js"></script>
@@ -51,8 +51,8 @@
         <script src="/app/home/home.module.js"></script>
         <script src="/app/layout/layout.module.js"></script>
         <script src="/app/widgets/widgets.module.js"></script>
-        <script src="/app/blocks/exception/exception.module.js"></script>
         <script src="/app/blocks/logger/logger.module.js"></script>
+        <script src="/app/blocks/exception/exception.module.js"></script>
         <script src="/app/blocks/router/router.module.js"></script>
         <script src="/app/core/config.js"></script>
         <script src="/app/core/constants.js"></script>
@@ -60,9 +60,9 @@
         <script src="/app/core/dataservice.js"></script>
         <script src="/app/home/home.controller.js"></script>
         <script src="/app/home/home.route.js"></script>
+        <script src="/app/blocks/logger/logger.js"></script>
         <script src="/app/blocks/exception/exception-handler.provider.js"></script>
         <script src="/app/blocks/exception/exception.js"></script>
-        <script src="/app/blocks/logger/logger.js"></script>
         <script src="/app/blocks/router/router-helper.provider.js"></script>
         <!-- endinject -->
         <!-- inject:spechelpers:js -->
@@ -70,10 +70,13 @@
         <!-- endinject -->
         <!-- inject:specs:js -->
         <script src="app/core/core.route.spec.js"></script>
+        <script src="app/core/dataservice.spec.js"></script>
         <script src="app/home/home.controller.spec.js"></script>
         <script src="app/home/home.route.spec.js"></script>
         <script src="app/home/home.unit.spec.js"></script>
+        <script src="app/blocks/logger/logger.spec.js"></script>
         <script src="app/blocks/exception/exception-handler.provider.spec.js"></script>
+        <script src="app/blocks/router/router-helper.provider.spec.js"></script>
         <!-- endinject -->
         <!-- inject:templates:js -->
         <script src=".tmp/templates.js"></script>

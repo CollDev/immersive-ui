@@ -14,14 +14,14 @@
         };
 
         return service;
-        
+
         ////////
 
         function getLayout() {
             return $http.get(apiUrl)
-                    .then(success)
-                    .catch(fail);
-            
+                .then(success)
+                .catch(fail);
+
             ////////
 
             function success(response) {

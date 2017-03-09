@@ -19,6 +19,8 @@
             window.location.hash = '/';
         }
 
+        $locationProvider.html5Mode(true);
+
         this.configure = function (cfg) {
             angular.extend(config, cfg);
         };
@@ -49,7 +51,7 @@
             function configureStates(states, otherwisePath) {
                 states.forEach(function (state) {
                     state.config.resolve =
-                            angular.extend(state.config.resolve || {}, config.resolveAlways);
+                        angular.extend(state.config.resolve || {}, config.resolveAlways);
                     $stateProvider.state(state.state, state.config);
                 });
                 if (otherwisePath && !hasOtherwise) {
@@ -70,12 +72,12 @@
                         stateCounts.errors++;
                         handlingStateChangeError = true;
                         var destination = (toState &&
-                                (toState.title || toState.name || toState.loadedTemplateUrl)) ||
-                                'unknown target';
+                            (toState.title || toState.name || toState.loadedTemplateUrl)) ||
+                            'unknown target';
                         var msg = 'Error routing to ' + destination + '. ' +
-                                (error.data || '') + '. <br/>' + (error.statusText || '') +
-                                ': ' + (error.status || '');
-                        logger.warning(msg, [toState]);
+                            (error.data || '') + '. <br/>' + (error.statusText || '') +
+                            ': ' + (error.status || '');
+                        logger.warning(msg, [toState], toState.title);
                         $location.path('/');
                     }
                 );

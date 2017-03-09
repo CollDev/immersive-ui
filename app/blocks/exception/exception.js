@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -11,20 +11,19 @@
         var service = {
             catcher: catcher
         };
-        
+
         return service;
 
-        function catcher(message) {
-            return function(e) {
-                var thrownDescription;
-                var newMessage;
+        ////////
+
+        function catcher(title) {
+            return function (e) {
+                var message = '\n' + e.data;
                 if (e.data && e.data.description) {
-                    thrownDescription = '\n' + e.data.description;
-                    newMessage = message + thrownDescription;
+                    message = '\n' + e.data.description;
                 }
-                e.data.description = newMessage;
-                logger.error(newMessage);
-                
+                logger.error(message, e, title);
+
                 return $q.reject(e);
             };
         }

@@ -47,11 +47,12 @@
      * @param  {Object} logger
      * @return {Function} the decorated $exceptionHandler service
      */
+    /* @ngInject */
     function extendExceptionHandler($delegate, exceptionHandler, logger) {
         return function (exception, cause) {
             var appErrorPrefix = exceptionHandler.config.appErrorPrefix || '';
             var errorData = {exception: exception, cause: cause};
-            exception.message = appErrorPrefix + exception.message;
+            logger.error(exception.message, errorData, appErrorPrefix);
             $delegate(exception, cause);
             /**
              * Could add the error to a service's collection,
@@ -63,7 +64,6 @@
              * @example
              *     throw { message: 'error message we added' };
              */
-            logger.error(exception.message, errorData);
         };
     }
 })();

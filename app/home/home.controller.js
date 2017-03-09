@@ -14,21 +14,21 @@
         vm.title = 'Home';
 
         activate();
-        
+
         ////////
 
         function activate() {
+            logger.info('Activated home view');
             var promises = [getLayout()];
-            
+
             return $q.all(promises).then(function () {
-                logger.info('Activated home view');
             });
         }
 
         function getLayout() {
             return dataservice.getLayout().then(function (data) {
                 vm.layout = data;
-                
+
                 return vm.layout;
             });
         }

@@ -8,9 +8,9 @@ describe('Home routes', function () {
             bard.inject('$httpBackend', '$location', '$rootScope', '$state', '$templateCache');
             $templateCache.put(view, '');
         });
-        
+
         bard.verifyNoOutstandingHttpRequests();
-        
+
         it('should map /home route to home View template', function () {
             expect($state.get('home').templateUrl).to.equal(view);
         });
@@ -21,8 +21,8 @@ describe('Home routes', function () {
             expect($state.is('home'));
         });
 
-        it('should map state home to url #/ ', function () {
-            expect($state.href('home', {})).to.equal('#/');
+        it('should map state home to url / ', function () {
+            expect($state.href('home', {})).to.equal('/');
         });
     });
 });

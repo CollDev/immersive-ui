@@ -11,6 +11,9 @@ module.exports = function() {
     var here = __dirname + '/';
     var temp = './.tmp/';
     var karmaFiles = bowerFiles.concat(
+        bower.directory + 'angular/angular.min.js',
+        bower.directory + 'angular-mocks/angular-mocks.js',
+        bower.directory + 'bardjs/dist/bard.js',
         client + 'test-helpers/*.js',
         clientApp + '**/*.module.js',
         clientApp + '**/*.js',

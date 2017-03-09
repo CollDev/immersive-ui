@@ -5,6 +5,7 @@ var config = require('./gulp.config')();
 var del = require('del');
 var path = require('path');
 var _ = require('lodash');
+var stylish = require('jshint-stylish');
 
 var plugin = require('gulp-load-plugins')({
     lazy: true
@@ -14,16 +15,27 @@ gulp.task('help', plugin.taskListing);
 
 gulp.task('default', ['help']);
 
-gulp.task('lint-js', function () {
+gulp.task('lint-js', ['hintjs', 'style-js']);
+
+gulp.task('hintjs', function() {
     log('Analyzing source with JSHint');
     return gulp
         .src(config.alljs)
         .pipe(plugin.if(args.verbose, plugin.print()))
-        .pipe(plugin.jshint())
+        .pipe(plugin.jshint('./.jshintrc'))
         .pipe(plugin.jshint.reporter('jshint-stylish', {
             verbose: true
         }))
-        .pipe(plugin.jshint.reporter('fail'));
+        .pipe(plugin.jshint.reporter('fail'))
+});
+
+gulp.task('style-js', function() {
+    log('Analyzing source with JSCS');
+    return gulp
+        .src(config.alljs)
+        .pipe(plugin.jscs('./.jscsrc'))
+        .pipe(plugin.jscs.reporter('text'))
+        .pipe(plugin.jscs.reporter('fail'));
 });
 
 gulp.task('watch-js', function () {
@@ -33,11 +45,11 @@ gulp.task('watch-js', function () {
 
 gulp.task('lint-scss', function () {
     log('Linting Scss files');
-    gulp.src(config.scss)
-        .pipe(plugin.scssLint({
-            customReport: plugin.scssLintStylish,
-            config: '.scsslintrc'
-        }));
+    return gulp
+        .src(config.scss)
+        .pipe(plugin.sassLint({config: '.sasslintrc'}))
+        .pipe(plugin.sassLint.format())
+        .pipe(plugin.sassLint.failOnError());
 });
 
 gulp.task('styles', ['lint-scss', 'clean-styles'], function () {
@@ -61,14 +73,14 @@ gulp.task('clean-styles', function () {
 
 gulp.task('watch-scss', function () {
     log('Watching Scss files');
-    //gulp.watch(config.scss, ['lint-scss']);
+    gulp.watch(config.scss, ['lint-scss']);
     gulp.watch(config.scss, ['styles']);
 });
 
 gulp.task('lint-html', function () {
     log('Linting Html files');
     return gulp.src(config.html)
-        .pipe(plugin.htmllint());
+        .pipe(plugin.htmllint({}, htmllintReporter));
 });
 
 gulp.task('watch-html', function () {
@@ -114,10 +126,10 @@ gulp.task('clean-js', function () {
 gulp.task('clean-all', function () {
     var delconfig = [].concat(config.build, config.temp, config.report);
     log('Cleaning all: ' + plugin.util.colors.blue(delconfig));
-    del(delconfig);
+    del(delconfig, {force: true});
 });
 
-gulp.task('clean-code', ['clean-js', 'clean-css', 'clean-fonts', 'clean-images'], function () {
+gulp.task('clean-code', ['clean-js', 'clean-fonts', 'clean-images'], function () {
     log('Cleaning prod files');
 });
 
@@ -147,8 +159,8 @@ gulp.task('wiredep', function () {
         .pipe(
             plugin.inject(
                 gulp
-                .src(config.js)
-                .pipe(plugin.angularFilesort()), {
+                    .src(config.js)
+                    .pipe(plugin.angularFilesort()), {
                     relative: true
                 }
             )
@@ -182,7 +194,8 @@ gulp.task('serve-dev', ['inject'], function () {
 
 gulp.task('optimize', ['inject', 'test'], function () {
     var assets = plugin.useref.assets({
-        searchPath: config.client
+        searchPath: config.client,
+        newLine: ';;;;;;;\n'
     });
     var cssFilter = plugin.filter('**/*.css', {
         restore: true
@@ -216,20 +229,6 @@ gulp.task('optimize', ['inject', 'test'], function () {
         .pipe(gulp.dest(config.build));
 });
 
-/** Steven's Test Server **/
-
-gulp.task('gulp-reload', browserSync.reload);
-
-gulp.task('watch', function() {
-    browserSync({
-        server: {
-            baseDir: './'
-        }
-    });
-    gulp.watch(["*.html", "scss/*.css", "js/*.js"], ["gulp-reload"]);
-});
-
-
 /**
  * Run test once and exit
  */
@@ -252,6 +251,16 @@ gulp.task('autotest', function (done) {
 gulp.task('build', ['optimize', 'images', 'fonts'], function () {
     log('Building everything');
 
+    gulp.src(config.build + 'index.html')
+        .pipe(plugin.replace('href="/"', 'href="/aag/"'))
+        .pipe(plugin.replace(
+            '<script src="js/lib.js"></script>',
+            '<script src="js/lib.js"></script>\n' +
+            '    <script src="js/FileSaver.min.js"></script>\n' +
+            '    <script src="js/jszip.min.js"></script>\n' +
+            '    <script src="js/vkbeautify.js"></script>'))
+        .pipe(gulp.dest(config.build));
+
     var msg = {
         title: 'gulp build',
         subtitle: 'Deployed to the build folder',
@@ -268,7 +277,7 @@ gulp.task('build-specs', ['templatecache'], function () {
     var options = config.getWiredepDefaultOptions();
     var specs = config.specs;
     options.devDependencies = true;
-    
+
     if (args.startServers) {
         specs = [].concat(specs, config.serverIntegrationSpecs);
     }
@@ -325,7 +334,7 @@ function changeEvent(event) {
 
 function clean(path) {
     log('Cleaning: ' + plugin.util.colors.blue(path));
-    del(path);
+    del(path, {force: true});
 }
 
 function errorLogger(error) {
@@ -373,8 +382,8 @@ function startBrowserSync(isDev, specRunner) {
     }
 
     var options = {
-        proxy: 'http://local.immersive.com/#/',
-        port: 3000,
+        proxy: 'http://local.immersive.com/',
+        port: 3001,
         files: [
             config.clientApp + '**/*.*',
             config.temp + '**/*.css',
@@ -397,7 +406,7 @@ function startBrowserSync(isDev, specRunner) {
     if(specRunner){
         options.startPath = config.specRunnerFile;
         options.proxy = 'local.immersive.com';
-        options.port = 3000;
+        options.port = 3001;
     }
 
     browserSync(options);
@@ -425,4 +434,14 @@ function startTests(singleRun, done) {
 
 function serve(isDev, specRunner) {
     startBrowserSync(isDev, specRunner);
+}
+
+function htmllintReporter(filepath, issues) {
+    if (issues.length > 0) {
+        issues.forEach(function (issue) {
+            log('[gulp-htmllint]' + filepath + ' [' + issue.line + ',' + issue.column + ']: ' + '(' + issue.code + ') ' + issue.msg);
+        });
+
+        process.exitCode = 1;
+    }
 }
